@@ -1,0 +1,3 @@
+#define FLASH_VECTOR_LENGTH 3
+#define FLASH_NXB 20
+#define FLASH_NYB 20
