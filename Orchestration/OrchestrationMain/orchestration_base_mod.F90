@@ -1,8 +1,10 @@
 module orchestration_base_module
 
     use iso_c_binding
-   
+
     implicit none
+
+#include "Flash.h"
 
     !--------------------------------------------------
     !--C++/FORTRAN datatypes
@@ -10,6 +12,8 @@ module orchestration_base_module
 
     integer, parameter :: orchestration_real = C_DOUBLE
     integer, parameter :: orchestration_integer = C_INT
+    real(orchestration_real), pointer, dimension(:,:) :: or_cnative_array => null()
+    real(orchestration_real), pointer, dimension(:) :: or_cnative_vector => null()
 
     !--------------------------------------------------
     !--Interface to C++ routines
@@ -18,8 +22,20 @@ module orchestration_base_module
     interface
         subroutine orchestration_compute_fi(or_scalar,or_vector,or_array) bind(c,name="orchestration_compute_fi")
             import
-            type(c_ptr), value :: or_scalar,or_vector,or_array
+            integer(orchestration_integer) :: or_scalar
+            real(orchestration_real), dimension(FLASH_VECTOR_LENGTH) :: or_vector
+            real(orchestration_real), dimension(FLASH_NYB,FLASH_NXB) :: or_array
         end subroutine orchestration_compute_fi
+
+        function orchestration_cnative_array() bind(C, name="orchestration_cnative_array")
+            import
+            type(c_ptr) :: orchestration_cnative_array
+        end function orchestration_cnative_array
+
+        function orchestration_cnative_vector() bind(C, name="orchestration_cnative_vector")
+            import
+            type(c_ptr) :: orchestration_cnative_vector
+        end function orchestration_cnative_vector
     end interface
 
     !--------------------------------------------------
@@ -28,18 +44,23 @@ module orchestration_base_module
 
     contains
         subroutine orchestration_compute(or_scalar,or_vector,or_array)
-            integer, intent(inout)         :: or_scalar
-            real, target, intent(inout)    :: or_vector(:)
-            real, target, intent(inout)    :: or_array(:,:)
-
-            integer(orchestration_integer), target :: or_c_scalar
-
-            or_c_scalar = INT(or_scalar,orchestration_integer)
-
-            call orchestration_compute_fi(C_LOC(or_c_scalar),C_LOC(or_vector),C_LOC(or_array))
-
-            !or_scalar = INT(or_c_scalar)
-
+            implicit none
+            integer, intent(inout) :: or_scalar
+            real(orchestration_real), intent(inout) :: or_vector(:)
+            real(orchestration_real), intent(inout) :: or_array(:,:)
+            call orchestration_compute_fi(or_scalar,or_vector,or_array)
         end subroutine
+
+        subroutine orchestration_mod_init()
+            implicit none
+            call c_f_pointer(orchestration_cnative_vector(), or_cnative_vector, [FLASH_VECTOR_LENGTH])
+            call c_f_pointer(orchestration_cnative_array(), or_cnative_array, [FLASH_NYB,FLASH_NXB])
+        end subroutine orchestration_mod_init
+
+        subroutine orchestration_mod_finalize()
+            implicit none
+            or_cnative_array => null()
+            or_cnative_vector => null()
+        end subroutine orchestration_mod_finalize
 
 end module orchestration_base_module

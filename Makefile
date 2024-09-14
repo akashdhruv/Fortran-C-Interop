@@ -5,10 +5,10 @@ FF = gfortran
 
 all:
 	$(CC) -c Orchestration/OrchestrationMain/cxx-source/orchestration.cpp \
-	-I$(BASEDIR)/Orchestration/OrchestrationMain/cxx-source
+	-I$(BASEDIR)/Orchestration/OrchestrationMain/cxx-source -I$(BASEDIR)
 	
 	$(CC) -c Orchestration/OrchestrationMain/orchestration_fi.cpp \
-	-I$(BASEDIR)/Orchestration/OrchestrationMain/cxx-source
+	-I$(BASEDIR)/Orchestration/OrchestrationMain/cxx-source -I$(BASEDIR)
 	
 	$(FF) -c Orchestration/OrchestrationMain/orchestration_base_mod.F90 -I$(BASEDIR)
 	
@@ -16,9 +16,9 @@ all:
 	
 	$(FF) -c Orchestration/Orchestration_data.F90 -I$(BASEDIR)
 	
-	$(FF) -c Orchestration/Orchestration_init.F90 -I$(BASEDIR)
+	$(FF) -c Orchestration/OrchestrationMain/Orchestration_init.F90 -I$(BASEDIR)
 	
-	$(FF) -c Orchestration/Orchestration_finalize.F90 -I$(BASEDIR)
+	$(FF) -c Orchestration/OrchestrationMain/Orchestration_finalize.F90 -I$(BASEDIR)
 	
 	$(FF) -c Orchestration/Orchestration_interface.F90 -I$(BASEDIR)
 	
