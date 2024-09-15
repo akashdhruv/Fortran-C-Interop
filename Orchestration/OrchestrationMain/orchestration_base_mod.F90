@@ -12,6 +12,7 @@ module orchestration_base_module
 
     integer, parameter :: orchestration_real = C_DOUBLE
     integer, parameter :: orchestration_integer = C_INT
+    integer, parameter :: orchestration_complex = C_DOUBLE_COMPLEX
     real(orchestration_real), pointer, dimension(:,:) :: or_cnative_array => null()
     real(orchestration_real), pointer, dimension(:) :: or_cnative_vector => null()
 
@@ -20,11 +21,12 @@ module orchestration_base_module
     !--------------------------------------------------
 
     interface
-        subroutine orchestration_compute_fi(or_scalar,or_vector,or_array) bind(c,name="orchestration_compute_fi")
+        subroutine orchestration_compute_fi(or_scalar,or_vector,or_array,or_complex) bind(c,name="orchestration_compute_fi")
             import
             integer(orchestration_integer) :: or_scalar
             real(orchestration_real), dimension(FLASH_VECTOR_LENGTH) :: or_vector
             real(orchestration_real), dimension(FLASH_NYB,FLASH_NXB) :: or_array
+            complex(orchestration_complex), dimension(FLASH_NYB,FLASH_NXB) :: or_complex
         end subroutine orchestration_compute_fi
 
         function orchestration_cnative_array() bind(C, name="orchestration_cnative_array")
@@ -43,12 +45,13 @@ module orchestration_base_module
     !--------------------------------------------------
 
     contains
-        subroutine orchestration_compute(or_scalar,or_vector,or_array)
+        subroutine orchestration_compute(or_scalar,or_vector,or_array,or_complex)
             implicit none
             integer, intent(inout) :: or_scalar
             real(orchestration_real), intent(inout) :: or_vector(:)
             real(orchestration_real), intent(inout) :: or_array(:,:)
-            call orchestration_compute_fi(or_scalar,or_vector,or_array)
+            complex(orchestration_complex), intent(inout) :: or_complex(FLASH_NXB,FLASH_NYB)
+            call orchestration_compute_fi(or_scalar,or_vector,or_array,or_complex)
         end subroutine
 
         subroutine orchestration_mod_init()

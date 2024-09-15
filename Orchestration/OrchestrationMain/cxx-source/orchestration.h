@@ -1,6 +1,7 @@
 #ifndef ORCHESTRATION_MOD
 #define ORCHESTRATION_MOD
 
+#include<complex>
 #include <stdio.h>
 #include <iostream>
 #include <Flash.h>
@@ -11,8 +12,8 @@
 #define OR_NYB FLASH_NYB
 
 extern FArray2D<double> or_cnative_array;
-extern double or_cnative_vector[OR_VECTOR_LENGTH];
+extern FArray1D<double> or_cnative_vector;
 
-extern void orchestration_compute (int& or_scalar,double or_vector[OR_VECTOR_LENGTH],FArray2D<double>& or_array);
+extern void orchestration_compute (int& or_scalar,FArray1D<double>& or_vector,FArray2D<double>& or_array,FArray2D<std::complex<double>>& or_complex);
 
 #endif
