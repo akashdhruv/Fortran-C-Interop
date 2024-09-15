@@ -13,6 +13,6 @@ void orchestration_compute (int& or_scalar,FArray1D<double>& or_vector,FArray2D<
   std::cout<<or_cnative_array(1,3)<<std::endl;
   std::cout<<or_complex(1,3)<<std::endl;
 
-  or_complex(1,3) = std::complex<double>(3,5);
+  or_complex(1,3) = std::complex<double>(3,5)/or_vector(0);
 
 }
