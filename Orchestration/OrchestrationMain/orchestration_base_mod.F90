@@ -54,7 +54,7 @@ module orchestration_base_module
         subroutine orchestration_mod_init()
             implicit none
             call c_f_pointer(orchestration_cnative_vector(), or_cnative_vector, [FLASH_VECTOR_LENGTH])
-            call c_f_pointer(orchestration_cnative_array(), or_cnative_array, [FLASH_NYB,FLASH_NXB])
+            call c_f_pointer(orchestration_cnative_array(), or_cnative_array, [FLASH_NXB,FLASH_NYB])
         end subroutine orchestration_mod_init
 
         subroutine orchestration_mod_finalize()

@@ -26,7 +26,7 @@ program Flash
     flash_vector = (/1.5,2.5,3.5/)
     flash_array(:,:) = 0.
     flash_array(2,4) = 15
-    or_cnative_array(4,2) = 22
+    or_cnative_array(2,4) = 22
     or_cnative_vector = flash_vector
 
     call Orchestration_operation(flash_scalar,flash_vector,flash_array)
@@ -38,7 +38,7 @@ program Flash
     !!print *,flash_gpu_mem
     !!print *,flash_gpu_mem_C
 
-    deallocate(flash_scalar,flash_vector,flash_array)
+    !deallocate(flash_scalar,flash_vector,flash_array)
     call Orchestration_finalize()
 
 end program
